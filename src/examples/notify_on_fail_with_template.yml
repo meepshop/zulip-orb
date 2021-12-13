@@ -1,0 +1,27 @@
+description: |
+  Notify zulip when a job fails.
+usage:
+  version: 2.1
+  orbs:
+    zulip-orb: meepshop/zulip-orb@1.0.0
+    node: circleci/node:4.1
+  jobs:
+    deploy:
+      executor:
+        name: node/default
+      steps:
+        - checkout
+        - node/install-packages
+        - run:
+            command: npm run deploy
+        # If any of the above steps in this job (such as the deployment) have failed, this Slack notification will send.
+        - zulip-orb/notify_zulip:
+            stream: test
+            topic: test_on_fail
+            content: test job failed
+            event: fail
+  workflows:
+    deploy_and_notify_on_fail:
+      jobs:
+        - deploy:
+            context: orb-global
