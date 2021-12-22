@@ -48,6 +48,6 @@ steps:
         else
           echo "This command is set to notify zulip on $ZULIP_PARAM_EVENT"
           echo "Current status: ${ZULIP_BUILD_STATUS}"
-        if
+        fi
       shell: /bin/bash
       when: always
