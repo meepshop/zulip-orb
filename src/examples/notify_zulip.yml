@@ -14,12 +14,17 @@ usage:
         - node/install-packages
         - run:
             command: npm run deploy
-        # If any of the above steps in this job (such as the deployment) have failed, this Slack notification will send.
+        # Need to have multiple commands to monitor different outcomes
         - zulip-orb/notify_zulip:
             stream: test
             topic: test_on_fail
             content: test job failed
             event: fail
+        - zulip-orb/notify_zulip:
+            stream: test
+            topic: test_on_success
+            content: test job succeed
+            event: pass
   workflows:
     deploy_and_notify_on_fail:
       jobs:
