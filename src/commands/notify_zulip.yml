@@ -25,19 +25,19 @@ steps:
   - run:
       name: Zulip - Detecting job status (FAIL)
       command: |
-        echo 'export ZULIP_BUILD_STATUS="fail"' >> $BASH_ENV
+        echo 'export BUILD_STATUS="fail"' >> $BASH_ENV
       when: on_fail
   - run:
       name: Zulip - Detecting job status (PASS)
       command: |
-        echo 'export ZULIP_BUILD_STATUS="pass"' >> $BASH_ENV
+        echo 'export BUILD_STATUS="pass"' >> $BASH_ENV
       when: on_success
   - run:
       name: Notify zulip
       environment:
         ZULIP_PARAM_EVENT: "<<parameters.event>>"
       command: |
-        if [ "$CCI_STATUS" = "$ZULIP_PARAM_EVENT" ] || [ "$ZULIP_PARAM_EVENT" = "always" ]; then
+        if [ "$BUILD_STATUS" = "$ZULIP_PARAM_EVENT" ] || [ "$ZULIP_PARAM_EVENT" = "always" ]; then
           echo "Notifying zulip"
           curl -X POST ${ZULIP_WEBHOOK} \
             -u "${ZULIP_BOT_EMAIL}:${ZULIP_BOT_API_KEY}" \
@@ -47,7 +47,7 @@ steps:
             -d "content=<< parameters.content >>"
         else
           echo "This command is set to notify zulip on $ZULIP_PARAM_EVENT"
-          echo "Current status: ${ZULIP_BUILD_STATUS}"
+          echo "Current status: ${BUILD_STATUS}"
         fi
       shell: /bin/bash
       when: always
