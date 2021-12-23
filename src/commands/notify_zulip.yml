@@ -21,6 +21,15 @@ parameters:
       In what event should this message send? Options: ["fail", "pass", "always"]. Default to 'always'.
     type: enum
     enum: ["fail", "pass", "always"]
+  webhook:
+    type: env_var_name
+    default: ZULIP_WEBHOOK
+  bot-email:
+    type: env_var_name
+    default: ZULIP_BOT_EMAIL
+  bot-api-key:
+    type: env_var_name
+    default: ZULIP_BOT_API_KEY
 steps:
   - run:
       name: Zulip - Detecting job status (FAIL)
@@ -39,8 +48,8 @@ steps:
       command: |
         if [ "$CCI_STATUS" = "$ZULIP_PARAM_EVENT" ] || [ "$ZULIP_PARAM_EVENT" = "always" ]; then
           echo "Notifying zulip"
-          curl -X POST ${ZULIP_WEBHOOK} \
-            -u "${ZULIP_BOT_EMAIL}:${ZULIP_BOT_API_KEY}" \
+          curl -X POST << parameters.webhook >> \
+            -u "<< parameters.bot-email >>:<< parameters.bot-api-key >>" \
             -d "type=stream" \
             -d "to=<< parameters.stream >>" \
             -d "topic=<< parameters.topic >>" \
