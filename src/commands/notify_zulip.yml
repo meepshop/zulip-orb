@@ -54,8 +54,8 @@ steps:
       command: |
         if [ "$BUILD_STATUS" = "$ZULIP_PARAM_EVENT" ] || [ "$ZULIP_PARAM_EVENT" = "always" ]; then
           echo "Notifying zulip"
-          curl -X POST << parameters.webhook >> \
-            -u "<< parameters.bot-email >>:<< parameters.bot-api-key >>" \
+          curl -X POST ${<< parameters.webhook >>} \
+            -u "${<< parameters.bot-email >>}:${<< parameters.bot-api-key >>}" \
             -d "type=stream" \
             -d "to=<< parameters.stream >>" \
             -d "topic=<< parameters.topic >>" \
