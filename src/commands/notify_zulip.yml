@@ -22,12 +22,18 @@ parameters:
     type: enum
     enum: ["fail", "pass", "always"]
   webhook:
+    description: |
+      zulip webhook api url.
     type: env_var_name
     default: ZULIP_WEBHOOK
   bot-email:
+    description: |
+      zulip bot email.
     type: env_var_name
     default: ZULIP_BOT_EMAIL
   bot-api-key:
+    description: |
+      zulip bot api key.
     type: env_var_name
     default: ZULIP_BOT_API_KEY
 steps:
