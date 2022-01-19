@@ -51,15 +51,18 @@ steps:
       name: Notify zulip
       environment:
         ZULIP_PARAM_EVENT: "<<parameters.event>>"
+        ZULIP_PARAM_STREAM: "<<parameters.stream>>"
+        ZULIP_PARAM_TOPIC: "<<parameters.topic>>"
+        ZULIP_PARAM_CONTENT: "<<parameters.content>>"
       command: |
         if [ "$BUILD_STATUS" = "$ZULIP_PARAM_EVENT" ] || [ "$ZULIP_PARAM_EVENT" = "always" ]; then
           echo "Notifying zulip"
           curl -X POST ${<< parameters.webhook >>} \
             -u "${<< parameters.bot-email >>}:${<< parameters.bot-api-key >>}" \
-            -d "type=stream" \
-            -d "to=<< parameters.stream >>" \
-            -d "topic=<< parameters.topic >>" \
-            -d "content=<< parameters.content >>"
+            --data-urlencode "type=stream" \
+            --data-urlencode "to=$ZULIP_PARAM_STREAM" \
+            --data-urlencode "topic=$ZULIP_PARAM_TOPIC" \
+            --data-urlencode "content=$ZULIP_PARAM_CONTENT"
         else
           echo "This command is set to notify zulip on $ZULIP_PARAM_EVENT"
           echo "Current status: ${BUILD_STATUS}"
